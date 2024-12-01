@@ -1,88 +1,53 @@
 package day1
 
 import (
-	"bufio"
 	"fmt"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 )
 
 func Day1() {
 	// read file
-	file, err := os.Open("./day1/input.txt")
+	file, err := os.ReadFile("./day1/input.txt")
 	if err != nil {
 		panic(err)
 	}
-	defer file.Close()
 
-	var lines []string
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		lines = append(lines, scanner.Text())
+	lines := strings.Split(strings.TrimSpace(string(file)), "\n")
+
+	//make and fill arrays
+	arr1, arr2 := make([]int, len(lines)), make([]int, len(lines))
+	for i, line := range lines {
+		fields := strings.Fields(line)
+		arr1[i], _ = strconv.Atoi(fields[0])
+		arr2[i], _ = strconv.Atoi(fields[1])
 	}
 
-	if err := scanner.Err(); err != nil {
-		fmt.Println("Error reading file:", err)
-		return
-	}
-
-	// actual program
-	var arr1, arr2 []int
-
-	arr1, arr2 = cutData(lines)
-	selectionSort(arr1)
-	selectionSort(arr2)
+	//array sorting
+	sort.Ints(arr1)
+	sort.Ints(arr2)
 
 	sum := 0
-	for i := range arr1 {
-		sum = diff(arr1[i], arr2[i]) + sum
+	for i := range lines {
+		sum += abs(arr1[i] - arr2[i])
 	}
 	fmt.Println(sum)
 	// part 2
 	sum = 0
-	for i := range arr1 {
+	for i := range lines {
 		sum = (arr1[i] * countTimes(arr1[i], arr2)) + sum
 	}
 
 	fmt.Println(sum)
 }
 
-// takes the data and cuts it into two arrays
-func cutData(lines []string) ([]int, []int) {
-	var arr1, arr2 []int
-	for _, line := range lines {
-		fields := strings.Fields(line)
-
-		// not gonna check for errors every line, screw that
-		var1, _ := strconv.Atoi(fields[0])
-		var2, _ := strconv.Atoi(fields[1])
-
-		arr1 = append(arr1, var1)
-		arr2 = append(arr2, var2)
+func abs(x int) int {
+	if x < 0 {
+		return -x
 	}
-	return arr1, arr2
-}
-
-// high school memories
-func selectionSort(arr []int) []int {
-	for i := range arr {
-		var minIndex = i
-		for j := i + 1; j < len(arr); j++ {
-			if arr[j] < arr[minIndex] {
-				minIndex = j
-			}
-		}
-		arr[i], arr[minIndex] = arr[minIndex], arr[i]
-	}
-	return arr
-}
-
-func diff(var1 int, var2 int) int {
-	if var1 < var2 {
-		return var2 - var1
-	}
-	return var1 - var2
+	return x
 }
 
 func countTimes(target int, arr []int) int {

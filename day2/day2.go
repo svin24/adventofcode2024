@@ -21,7 +21,16 @@ func Day2() {
 			totalSum++
 		}
 	}
-	fmt.Println(totalSum)
+	fmt.Println("Part 1:", totalSum)
+
+	// part 2
+	totalSum = 0
+	for _, line := range numbers {
+		if isSafePart2(line) {
+			totalSum++
+		}
+	}
+	fmt.Println("Part 2:", totalSum)
 }
 
 func cutLines(lines []string) [][]int {
@@ -46,8 +55,8 @@ func cutLines(lines []string) [][]int {
 
 func isSafe(line []int) bool {
 	// there is the potential for a bug here that I won't check
-	var isIncreasing bool = true
-	var isDecreasing bool = true
+	isIncreasing := true
+	isDecreasing := true
 	for i := 0; i < len(line)-1; i++ {
 		diff := line[i+1] - line[i]
 
@@ -65,4 +74,20 @@ func isSafe(line []int) bool {
 	}
 
 	return isIncreasing || isDecreasing
+}
+
+func isSafePart2(line []int) bool {
+	if isSafe(line) {
+		return true
+	}
+	// according to anons on 4chan i need to brute force it
+	for i := range line {
+		modiline := make([]int, 0, len(line)-1)
+		modiline = append(modiline, line[:i]...)
+		modiline = append(modiline, line[i+1:]...)
+		if isSafe(modiline) {
+			return true
+		}
+	}
+	return false
 }

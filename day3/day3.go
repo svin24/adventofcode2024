@@ -39,17 +39,13 @@ func Day3() {
 }
 
 func trimAndCalculate(data []string) int {
-	var numParts []int
 	var sum int = 0
 	for i := range data {
 		trim := strings.TrimSuffix(strings.TrimPrefix(data[i], "mul("), ")")
 		parts := strings.Split(trim, ",")
 		num0, _ := strconv.Atoi(parts[0])
 		num1, _ := strconv.Atoi(parts[1])
-		numParts = append(numParts, num0, num1)
-	}
-	for i := 0; i < len(numParts); i += 2 {
-		sum = numParts[i]*numParts[i+1] + sum
+		sum = num0*num1 + sum
 	}
 	return sum
 }

@@ -33,14 +33,14 @@ func Day1() {
 	for i := range lines {
 		sum += abs(arr1[i] - arr2[i])
 	}
-	fmt.Println(sum)
+	fmt.Println("Part 1:", sum)
 	// part 2
 	sum = 0
 	for i := range lines {
 		sum = (arr1[i] * countTimes(arr1[i], arr2)) + sum
 	}
 
-	fmt.Println(sum)
+	fmt.Println("Part 2:", sum)
 }
 
 func abs(x int) int {

@@ -26,34 +26,28 @@ func Day4() {
 		{-1, -1}, // Diagonal Up-Left
 		{1, -1},  // Diagonal Down-Left
 	}
-
-	var silver int = 0
-	var gold int = 0
-	for r := range matrix {
-		for c := range matrix[0] {
-			for _, dir := range directions {
-				if findXmasPart1(matrix, r, c, word, dir) {
-					silver++
-				}
-			}
-		}
-	}
-	// part 2
 	diagonals := [][2]int{
 		{1, 1},   // Diagonal Down-Right
 		{-1, 1},  // Diagonal Up-Right
 		{-1, -1}, // Diagonal Up-Left
 		{1, -1},  // Diagonal Down-Left
 	}
+	var silver int = 0
+	var gold int = 0
 	for r := range matrix {
 		for c := range matrix[0] {
-			//part 2
+			// part 1
+			for _, dir := range directions {
+				if findXmasPart1(matrix, r, c, word, dir) {
+					silver++
+				}
+			}
+			// part 1
 			if matrix[r][c] == "A" {
 				if findXmasPart2(matrix, r, c, diagonals) {
 					gold++
 				}
 			}
-
 		}
 	}
 	fmt.Println("Part 1:", silver)

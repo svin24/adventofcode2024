@@ -13,7 +13,7 @@ type Rules struct {
 }
 
 func Day5() {
-	arr1, arr2, err := readAdventFile("./day5/smallinput.txt")
+	arr1, arr2, err := readAdventFile("./day5/input.txt")
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -22,17 +22,85 @@ func Day5() {
 	rules := getRules(arr1)
 	updates := getUpdates(arr2)
 
-	var totalMiddle int
+	// part 1
+	var silver int
+	var gold int
+	var invalidUpdates [][]int
+
 	for _, update := range updates {
 		if isUpdateValid(update, rules) {
 			middle := findMiddlePage(update)
-			fmt.Printf("Valid update: %v, Middle page: %d\n", update, middle)
-			totalMiddle += middle
+			silver += middle
 		} else {
-			fmt.Printf("Invalid update: %v\n", update)
+			invalidUpdates = append(invalidUpdates, update)
 		}
 	}
-	fmt.Println(totalMiddle)
+
+	// Process invalid updates by reordering them
+	for _, invalidUpdate := range invalidUpdates {
+		reorderedUpdate := reorderUpdate(invalidUpdate, rules)
+		middle := findMiddlePage(reorderedUpdate)
+		gold += middle
+	}
+
+	fmt.Println("Part 1:", silver)
+	fmt.Println("Part 2:", gold)
+}
+
+func reorderUpdate(update []int, rules []Rules) []int {
+	// Build a graph of dependencies
+	graph := make(map[int][]int)
+	inDegree := make(map[int]int)
+
+	// Initialize graph nodes
+	for _, page := range update {
+		graph[page] = []int{}
+		inDegree[page] = 0
+	}
+
+	// Populate graph edges based on rules
+	for _, rule := range rules {
+		if contains(update, rule.Before) && contains(update, rule.After) {
+			graph[rule.Before] = append(graph[rule.Before], rule.After)
+			inDegree[rule.After]++
+		}
+	}
+
+	// Perform topological sort
+	var sorted []int
+	var queue []int
+
+	// Find nodes with no incoming edges
+	for page, degree := range inDegree {
+		if degree == 0 {
+			queue = append(queue, page)
+		}
+	}
+
+	for len(queue) > 0 {
+		current := queue[0]
+		queue = queue[1:]
+		sorted = append(sorted, current)
+
+		for _, neighbor := range graph[current] {
+			inDegree[neighbor]--
+			if inDegree[neighbor] == 0 {
+				queue = append(queue, neighbor)
+			}
+		}
+	}
+
+	return sorted
+}
+
+// Go apparently can't do this on it's own
+func contains(arr []int, val int) bool {
+	for _, v := range arr {
+		if v == val {
+			return true
+		}
+	}
+	return false
 }
 
 func findMiddlePage(update []int) int {

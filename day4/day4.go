@@ -9,7 +9,7 @@ import (
 )
 
 func Day4() {
-	matrix, err := readXmasFile("./day4/input.txt")
+	matrix, err := readXmasFile("./day4/smallinput.txt")
 	if err != nil {
 		fmt.Println(err)
 		return

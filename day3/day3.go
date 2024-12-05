@@ -9,9 +9,10 @@ import (
 )
 
 func Day3() {
-	file, err := os.ReadFile("./day3/input.txt")
+	file, err := os.ReadFile("./day3/smallinput.txt")
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
+		return
 	}
 
 	//part 1

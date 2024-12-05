@@ -13,7 +13,7 @@ type Rules struct {
 }
 
 func Day5() {
-	arr1, arr2, err := readAdventFile("./day5/input.txt")
+	arr1, arr2, err := readAdventFile("./day5/smallinput.txt")
 	if err != nil {
 		fmt.Println(err)
 		return

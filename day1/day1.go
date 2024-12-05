@@ -10,9 +10,10 @@ import (
 
 func Day1() {
 	// read file
-	file, err := os.ReadFile("./day1/input.txt")
+	file, err := os.ReadFile("./day1/smallinput.txt")
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
+		return
 	}
 
 	lines := strings.Split(strings.TrimSpace(string(file)), "\n")
